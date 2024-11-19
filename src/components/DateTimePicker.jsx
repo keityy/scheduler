@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
+import Calendar from '@/components/ui/calendar'; // この行を修正
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -32,7 +32,6 @@ const DateTimePicker = () => {
 
   const handleAddDateTime = () => {
     if (date) {
-      // date-fnsを使用して日付をフォーマット
       const formattedDate = format(date, 'M月d日', { locale: ja });
       let newDateTime = `${formattedDate} ${startTime}`;
       if (timeFormat === 'start-end') {
@@ -46,7 +45,7 @@ const DateTimePicker = () => {
   const handleRemoveLastLine = () => {
     const lines = selectedDateTime.split('\n');
     if (lines.length > 1) {
-      lines.splice(-2, 1); // Remove the second to last line (last line is always empty due to the trailing \n)
+      lines.splice(-2, 1);
       setSelectedDateTime(lines.join('\n'));
     }
   };
@@ -66,38 +65,19 @@ const DateTimePicker = () => {
     }
   }
 
-  const CustomButton = ({ children, onClick, className }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex items-center justify-center w-7 h-7 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 ${className}`}
-    >
-      {children}
-    </button>
-  );
-
   return (
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">予定調整日時選択</h1>
-      <div className="mb-4 flex justify-center">
+      <div className="mb-4 border rounded-lg shadow-sm">
         <Calendar
           mode="single"
           selected={date}
           onSelect={handleDateChange}
-          className="rounded-md border w-full"
+          className="rounded-md"
           locale={ja}
-          components={{
-            IconLeft: ({ ...props }) => (
-              <CustomButton onClick={props.onClick}>
-                <ChevronLeft className="h-4 w-4" />
-              </CustomButton>
-            ),
-            IconRight: ({ ...props }) => (
-              <CustomButton onClick={props.onClick}>
-                <ChevronRight className="h-4 w-4" />
-              </CustomButton>
-            ),
-          }}
+          weekStartsOn={0}
+          defaultMonth={date}
+          initialFocus={true}
         />
       </div>
       <div className="mb-4">
