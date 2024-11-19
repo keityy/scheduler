@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { ChevronLeft, ChevronRight, Copy } from 'lucide-react';
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
 
 const DateTimePicker = () => {
   const [date, setDate] = useState(new Date());
@@ -15,7 +17,9 @@ const DateTimePicker = () => {
   const [timeFormat, setTimeFormat] = useState('start');
 
   const handleDateChange = (newDate) => {
-    setDate(newDate);
+    if (newDate) {
+      setDate(newDate);
+    }
   };
 
   const handleStartTimeChange = (newTime) => {
@@ -27,13 +31,16 @@ const DateTimePicker = () => {
   };
 
   const handleAddDateTime = () => {
-    const formattedDate = date.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
-    let newDateTime = `${formattedDate} ${startTime}`;
-    if (timeFormat === 'start-end') {
-      newDateTime += ` - ${endTime}`;
+    if (date) {
+      // date-fnsを使用して日付をフォーマット
+      const formattedDate = format(date, 'M月d日', { locale: ja });
+      let newDateTime = `${formattedDate} ${startTime}`;
+      if (timeFormat === 'start-end') {
+        newDateTime += ` - ${endTime}`;
+      }
+      newDateTime += '\n';
+      setSelectedDateTime(prevState => prevState + newDateTime);
     }
-    newDateTime += '\n';
-    setSelectedDateTime(prevState => prevState + newDateTime);
   };
 
   const handleRemoveLastLine = () => {
@@ -78,6 +85,7 @@ const DateTimePicker = () => {
           selected={date}
           onSelect={handleDateChange}
           className="rounded-md border w-full"
+          locale={ja}
           components={{
             IconLeft: ({ ...props }) => (
               <CustomButton onClick={props.onClick}>
